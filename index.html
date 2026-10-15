@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Все страницы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Onest:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #ECE8F7;
+    --ink: #221C42;
+    --muted: #5E5882;
+    --font-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+    --font-body: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: clamp(32px, 7vw, 88px) clamp(18px, 4vw, 40px) 64px;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 7.5vw, 5rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin: 0 0 14px;
+  }
+  .lead {
+    margin: 0 0 clamp(32px, 6vw, 64px);
+    color: var(--muted);
+    font-size: 1.1rem;
+    max-width: 44ch;
+  }
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 22px;
+  }
+  .card {
+    --bg: #fff;
+    --fg: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 260px;
+    padding: 24px;
+    border-radius: 28px 28px 28px 6px;
+    background: var(--bg);
+    color: var(--fg);
+    text-decoration: none;
+    transition: transform .25s ease, border-radius .25s ease;
+  }
+  .card:hover, .card:focus-visible {
+    transform: translateY(-6px) rotate(-1deg);
+    border-radius: 28px;
+  }
+  .card:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+  .emoji { font-size: 2.6rem; line-height: 1; }
+  .card h2 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.35rem;
+    line-height: 1.2;
+    margin: 0 0 8px;
+  }
+  .card p { margin: 0; opacity: .85; }
+  .open {
+    margin-top: 18px;
+    font-weight: 500;
+    font-size: .95rem;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  /* у каждого сайта свой цвет — по настроению страницы */
+  .c-new     { --bg: #D9366B; }
+  .c-asawda  { --bg: #2E4A9E; }
+  .c-e       { --bg: #F2A30F; --fg: #2B1B00; }
+  .c-kuaska  { --bg: #E4672B; }
+  .c-love    { --bg: #7B55D1; }
+  footer {
+    margin-top: 48px;
+    color: var(--muted);
+    font-size: .9rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card { transition: none; }
+    .card:hover, .card:focus-visible { transform: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Все страницы</h1>
+  <p class="lead">Выбери, какую открыть.</p>
+
+  <ul class="grid">
+    <li>
+      <a class="card c-new" href="new/">
+        <span class="emoji" aria-hidden="true">💌</span>
+        <span>
+          <h2>Только для тебя</h2>
+          <p>Письмо для Маши</p>
+          <span class="open">Открыть</span>
+        </span>
+      </a>
+    </li>
+    <li>
+      <a class="card c-asawda" href="asawda/">
+        <span class="emoji" aria-hidden="true">🚂</span>
+        <span>
+          <h2>Путь к нашей встрече</h2>
+          <p>Скучаю</p>
+          <span class="open">Открыть</span>
+        </span>
+      </a>
+    </li>
+    <li>
+      <a class="card c-e" href="e/">
+        <span class="emoji" aria-hidden="true">🌷</span>
+        <span>
+          <h2>С 8 Марта, Любимая!</h2>
+          <p>Поздравление</p>
+          <span class="open">Открыть</span>
+        </span>
+      </a>
+    </li>
+    <li>
+      <a class="card c-kuaska" href="kuaska/">
+        <span class="emoji" aria-hidden="true">🐱</span>
+        <span>
+          <h2>Мир Котиков</h2>
+          <p>Мы вместе уже…</p>
+          <span class="open">Открыть</span>
+        </span>
+      </a>
+    </li>
+    <li>
+      <a class="card c-love" href="love/">
+        <span class="emoji" aria-hidden="true">🌸</span>
+        <span>
+          <h2>Для тебя</h2>
+          <p>Письмо, причины любви и сердечки</p>
+          <span class="open">Открыть</span>
+        </span>
+      </a>
+    </li>
+  </ul>
+</main>
+</body>
+</html>

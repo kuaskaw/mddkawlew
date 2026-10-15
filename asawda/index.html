@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Путь к нашей встрече ❤️</title>
+    <style>
+        /* ===== RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a1a;
+            color: #fff;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ===== CANVAS ЗВЕЗДЫ ===== */
+        #starCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== ОБЩИЕ СТИЛИ ===== */
+        .section {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 24px 40px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .divider {
+            color: #ff6b9d;
+            font-size: 18px;
+            letter-spacing: 6px;
+            margin: 20px 0 10px;
+        }
+
+        .days-counter {
+            font-size: 12px;
+            color: #b8b8d0;
+            margin-top: 12px;
+            letter-spacing: 1px;
+        }
+
+        /* ===== БЛОК 1. HERO ===== */
+        #hero {
+            background: linear-gradient(180deg, #0a0a1a 0%, #1a0a2e 100%);
+            justify-content: center;
+            min-height: 100vh;
+            padding-top: 20px;
+        }
+
+        .hero-stars {
+            font-size: 28px;
+            margin-bottom: 8px;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.9); }
+        }
+
+        .hero-title {
+            font-size: 38px;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.15);
+            letter-spacing: 4px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            color: #b8b8d0;
+            margin-top: 12px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* ===== КАРТА С САМОЛЕТИКОМ ===== */
+        .map-container {
+            width: 100%;
+            max-width: 360px;
+            margin: 28px auto 0;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 18px 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(4px);
+        }
+
+        .map-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #b8b8d0;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .map-title span {
+            color: #fff;
+        }
+
+        .map-track {
+            position: relative;
+            width: 100%;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            margin: 6px 0 4px;
+        }
+
+        .map-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #4fc3f7 0%, #4fc3f7 45%, #ffd700 45%, #ffd700 100%);
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+
+        .map-line-bg {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-50%);
+            border-radius: 2px;
+        }
+
+        .plane {
+            position: absolute;
+            top: 50%;
+            left: 45.2%;
+            transform: translate(-50%, -50%);
+            font-size: 22px;
+            animation: fly 1.8s ease-in-out infinite;
+            filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.3));
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        @keyframes fly {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0px) rotate(-2deg); }
+            50% { transform: translate(-50%, -50%) translateY(-6px) rotate(2deg); }
+        }
+
+        .plane-trail {
+            position: absolute;
+            top: 50%;
+            left: 45.2%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.6), transparent);
+            z-index: 1;
+            animation: trailFade 2s ease-in-out infinite;
+        }
+
+        @keyframes trailFade {
+            0%, 100% { opacity: 0.6; width: 40px; }
+            50% { opacity: 0.2; width: 60px; }
+        }
+
+        .map-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #8888aa;
+            margin-top: 4px;
+            padding: 0 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .map-labels .start {
+            color: #4fc3f7;
+        }
+        .map-labels .finish {
+            color: #ffd700;
+        }
+
+        .map-progress {
+            font-size: 11px;
+            color: #ffd700;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+        }
+
+        .map-tip {
+            font-size: 11px;
+            color: #b8b8d0;
+            margin-top: 4px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-style: italic;
+        }
+
+        .map-tip.show {
+            opacity: 0.7;
+        }
+
+        /* ===== ТАЙМЕР ===== */
+        .timer-container {
+            margin-top: 18px;
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .timer-label {
+            font-size: 12px;
+            color: #8888aa;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .timer-display {
+            font-size: 26px;
+            font-weight: 800;
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
+            letter-spacing: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ===== БЛОК 2. НИТИ СУДЬБЫ ===== */
+        #threads {
+            background: linear-gradient(180deg, #1a0a2e 0%, #2d1b4e 100%);
+            padding-top: 60px;
+            padding-bottom: 60px;
+        }
+
+        .thread-item {
+            width: 100%;
+            max-width: 340px;
+            margin-bottom: 32px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .thread-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .thread-dot {
+            display: inline-block;
+            font-size: 20px;
+            color: #4fc3f7;
+            margin-bottom: 6px;
+            transition: color 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+            padding: 4px 12px;
+        }
+
+        .thread-dot.active {
+            color: #ffd700;
+            transform: scale(1.3);
+        }
+
+        .thread-text {
+            font-size: 15px;
+            color: #d0d0e8;
+            line-height: 1.6;
+            font-weight: 300;
+            padding: 0 8px;
+            transition: color 0.3s ease;
+        }
+
+        .thread-text.active {
+            color: #fff;
+        }
+
+        .thread-connector {
+            width: 1px;
+            height: 20px;
+            background: linear-gradient(180deg, #4fc3f7, rgba(79, 195, 247, 0.1));
+            margin: 0 auto 8px;
+            transition: background 0.6s ease;
+        }
+
+        .thread-connector.gold {
+            background: linear-gradient(180deg, #ffd700, rgba(255, 215, 0, 0.1));
+        }
+
+        .thread-footer {
+            font-size: 14px;
+            color: #b8b8d0;
+            font-style: italic;
+            margin-top: 20px;
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== БЛОК 3. ПРОГРЕСС-БАРЫ ===== */
+        #bars {
+            background: linear-gradient(180deg, #1a1a2e 0%, #2a1a3e 100%);
+            padding-top: 60px;
+            padding-bottom: 60px;
+        }
+
+        .bar-card {
+            width: 100%;
+            max-width: 340px;
+            margin-bottom: 32px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .bar-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bar-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .bar-icon {
+            font-size: 22px;
+        }
+
+        .bar-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .bar-percent {
+            font-size: 15px;
+            font-weight: 700;
+            margin-left: auto;
+            color: #b8b8d0;
+        }
+
+        .bar-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            overflow: visible;
+            position: relative;
+            margin-top: 4px;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .bar-fill.glow-gold {
+            background: linear-gradient(90deg, #ffd700, #ffb300);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .bar-fill.glow-pink {
+            background: linear-gradient(90deg, #ff6b9d, #ff4081);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.2);
+        }
+
+        .bar-fill.glow-cyan {
+            background: linear-gradient(90deg, #00d4ff, #00b0ff);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .bar-fill.glow-gold::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .bar-description {
+            font-size: 13px;
+            color: #b8b8d0;
+            margin-top: 8px;
+            line-height: 1.5;
+            font-weight: 300;
+            padding: 0 2px;
+        }
+
+        .bar-sparkles {
+            margin-top: 4px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .bar-sparkles.show {
+            opacity: 1;
+        }
+
+        .bars-footer {
+            font-size: 14px;
+            color: #b8b8d0;
+            font-style: italic;
+            margin-top: 10px;
+            opacity: 0.7;
+            max-width: 340px;
+            line-height: 1.6;
+        }
+
+        /* ===== БЛОК 4. ПИСЬМО ===== */
+        #letter {
+            background: #0a0a0f;
+            padding-top: 60px;
+            padding-bottom: 60px;
+            min-height: 100vh;
+            justify-content: center;
+        }
+
+        .letter-paper {
+            width: 100%;
+            max-width: 340px;
+            background: #f5e6c8;
+            border-radius: 12px;
+            padding: 30px 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 107, 157, 0.05);
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .letter-paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(transparent, transparent 27px, rgba(0, 0, 0, 0.03) 27px, rgba(0, 0, 0, 0.03) 28px);
+            border-radius: 12px;
+            pointer-events: none;
+        }
+
+        .letter-text {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 15px;
+            color: #3d2b1f;
+            line-height: 1.9;
+            text-align: left;
+            font-style: italic;
+            min-height: 200px;
+        }
+
+        .letter-text .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 18px;
+            background: #3d2b1f;
+            animation: blink 0.8s step-end infinite;
+            vertical-align: text-bottom;
+            margin-left: 1px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .letter-text .line {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* ===== КНОПКА СЮРПРИЗА ===== */
+        .surprise-btn {
+            width: 100%;
+            max-width: 340px;
+            padding: 16px;
+            background: transparent;
+            border: 2px solid #ff6b9d;
+            color: #ff6b9d;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 0 30px rgba(255, 107, 157, 0.1);
+        }
+
+        .surprise-btn:active {
+            transform: scale(0.96);
+            background: rgba(255, 107, 157, 0.15);
+            box-shadow: 0 0 50px rgba(255, 107, 157, 0.3);
+        }
+
+        .surprise-btn .heart-pulse {
+            display: inline-block;
+            animation: pulseHeartBtn 1.2s ease-in-out infinite;
+        }
+
+        @keyframes pulseHeartBtn {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* ===== ФИНАЛЬНАЯ АНИМАЦИЯ ===== */
+        .final-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .final-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .final-lines {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .final-line {
+            position: absolute;
+            width: 4px;
+            height: 80px;
+            border-radius: 2px;
+            transform-origin: center bottom;
+        }
+
+        .final-line.left {
+            background: linear-gradient(180deg, #ffd700, rgba(255, 215, 0, 0));
+            left: 30%;
+            transform: rotate(-20deg) translateY(20px);
+            animation: lineSweepLeft 1.2s ease forwards;
+        }
+
+        .final-line.right {
+            background: linear-gradient(180deg, #ff6b9d, rgba(255, 107, 157, 0));
+            right: 30%;
+            transform: rotate(20deg) translateY(20px);
+            animation: lineSweepRight 1.2s ease forwards;
+        }
+
+        @keyframes lineSweepLeft {
+            0% { transform: rotate(-20deg) translateY(60px); opacity: 0; }
+            100% { transform: rotate(-20deg) translateY(20px); opacity: 1; }
+        }
+
+        @keyframes lineSweepRight {
+            0% { transform: rotate(20deg) translateY(60px); opacity: 0; }
+            100% { transform: rotate(20deg) translateY(20px); opacity: 1; }
+        }
+
+        .final-text {
+            font-size: 28px;
+            font-weight: 900;
+            color: #fff;
+            text-align: center;
+            margin-top: 30px;
+            line-height: 1.4;
+            opacity: 0;
+            transition: opacity 0.6s ease 1.2s;
+        }
+
+        .final-text.show {
+            opacity: 1;
+        }
+
+        .final-text .heart-big {
+            color: #ff6b9d;
+            display: inline-block;
+            animation: pulseHeartBtn 1s ease-in-out infinite;
+        }
+
+        .final-sub {
+            font-size: 16px;
+            font-weight: 300;
+            color: #b8b8d0;
+            margin-top: 8px;
+        }
+
+        .final-confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .final-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .final-heart {
+            position: absolute;
+            font-size: 24px;
+            animation: heartFloat linear forwards;
+        }
+
+        @keyframes heartFloat {
+            0% { transform: translateY(20px) scale(0.5); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
+        }
+
+        /* ===== КНОПКА ЗВОНКА ===== */
+        .call-btn {
+            width: 100%;
+            max-width: 340px;
+            padding: 18px 20px;
+            background: #00e676;
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            box-shadow: 0 0 40px rgba(0, 230, 118, 0.25);
+            animation: callPulse 2s ease-in-out infinite;
+            margin-top: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .call-btn:active {
+            transform: scale(0.96);
+        }
+
+        @keyframes callPulse {
+            0%, 100% { box-shadow: 0 0 40px rgba(0, 230, 118, 0.25); }
+            50% { box-shadow: 0 0 60px rgba(0, 230, 118, 0.45); }
+        }
+
+        .call-btn .number {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .call-btn .sub {
+            font-size: 13px;
+            font-weight: 300;
+            opacity: 0.85;
+            letter-spacing: 0.5px;
+        }
+
+        .call-btn .icon {
+            font-size: 28px;
+            margin-bottom: 2px;
+        }
+
+        /* ===== КНОПКА ЗАКРЫТЬ СЮРПРИЗ ===== */
+        .close-final {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            font-size: 24px;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: background 0.3s ease;
+        }
+
+        .close-final:active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .close-final.show {
+            display: flex;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 380px) {
+            .hero-title {
+                font-size: 30px;
+            }
+            .timer-display {
+                font-size: 20px;
+            }
+            .letter-text {
+                font-size: 14px;
+            }
+            .final-text {
+                font-size: 22px;
+            }
+            .call-btn {
+                font-size: 17px;
+                padding: 16px;
+            }
+            .call-btn .number {
+                font-size: 16px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .section {
+                padding: 80px 40px;
+            }
+            .hero-title {
+                font-size: 48px;
+            }
+            .timer-display {
+                font-size: 32px;
+            }
+            .map-container {
+                max-width: 460px;
+                padding: 24px 24px 28px;
+            }
+            .bar-card,
+            .thread-item,
+            .letter-paper,
+            .surprise-btn,
+            .call-btn {
+                max-width: 460px;
+            }
+            .final-lines {
+                width: 280px;
+                height: 280px;
+            }
+            .final-line {
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== CANVAS ЗВЕЗДЫ ===== -->
+    <canvas id="starCanvas"></canvas>
+
+    <!-- ===== БЛОК 1. HERO ===== -->
+    <section id="hero" class="section">
+        <div class="hero-stars">✨</div>
+        <h1 class="hero-title">СКУЧАЮ<br />ПО ТЕБЕ</h1>
+        <p class="hero-subtitle">Каждая секунда приближает нас друг к другу</p>
+
+        <!-- Карта с самолетиком -->
+        <div class="map-container" id="mapContainer">
+            <div class="map-title">✈️ <span>УНЪЮГАН</span> → <span>ТЮМЕНЬ</span></div>
+            <div class="map-track">
+                <div class="map-line-bg"></div>
+                <div class="map-line"></div>
+                <div class="plane" id="plane">✈️</div>
+                <div class="plane-trail"></div>
+            </div>
+            <div class="map-labels">
+                <span class="start">30 июня</span>
+                <span class="finish">10 августа</span>
+            </div>
+            <div class="map-progress">45.2% пути</div>
+            <div class="map-tip" id="mapTip">❤️ Я уже на полпути к тебе</div>
+        </div>
+
+        <!-- Таймер -->
+        <div class="timer-container">
+            <div class="timer-label">⏱️ Осталось до встречи</div>
+            <div class="timer-display" id="timerDisplay">41д 8ч 42м 18с</div>
+        </div>
+
+        <div class="divider">─── ❤️ ───</div>
+        <div class="days-counter" id="daysCounter">Дней без тебя: 19</div>
+    </section>
+
+    <!-- ===== БЛОК 2. НИТИ СУДЬБЫ ===== -->
+    <section id="threads" class="section">
+        <div class="section-title">НИТИ СУДЬБЫ</div>
+
+        <div class="thread-item" data-index="0">
+            <div class="thread-dot" data-target="0">✦</div>
+            <div class="thread-text" data-target="0">«Каждое утро я просыпаюсь и сразу смотрю на телефон»</div>
+            <div class="thread-connector"></div>
+        </div>
+
+        <div class="thread-item" data-index="1">
+            <div class="thread-dot" data-target="1">✦</div>
+            <div class="thread-text" data-target="1">«Вечером я представляю, как мы сидим и болтаем»</div>
+            <div class="thread-connector"></div>
+        </div>
+
+        <div class="thread-item" data-index="2">
+            <div class="thread-dot" data-target="2">✦</div>
+            <div class="thread-text" data-target="2">«Выходные кажутся бесконечными без тебя»</div>
+            <div class="thread-connector"></div>
+        </div>
+
+        <div class="thread-item" data-index="3">
+            <div class="thread-dot" data-target="3">✦</div>
+            <div class="thread-text" data-target="3">«Я перечитываю наши переписки и улыбаюсь»</div>
+            <div class="thread-connector"></div>
+        </div>
+
+        <div class="thread-footer">«Каждая нить — это моя мысль о тебе. Их тысячи»</div>
+    </section>
+
+    <!-- ===== БЛОК 3. ПРОГРЕСС-БАРЫ ===== -->
+    <section id="bars" class="section">
+        <div class="section-title">ЧТО Я ЛЮБЛЮ В ТЕБЕ</div>
+
+        <!-- Бар 1 -->
+        <div class="bar-card" data-index="0">
+            <div class="bar-header">
+                <span class="bar-icon">👁️</span>
+                <span class="bar-name">ТВОИ ГЛАЗЫ</span>
+                <span class="bar-percent" id="percent1">92%</span>
+            </div>
+            <div class="bar-track">
+                <div class="bar-fill glow-gold" id="fill1" style="width:0%;"></div>
+            </div>
+            <div class="bar-description">«Я могу смотреть на них вечно. Даже через экран они заставляют меня улыбаться»</div>
+            <div class="bar-sparkles" id="sparkles1">✨✨✨</div>
+        </div>
+
+        <!-- Бар 2 -->
+        <div class="bar-card" data-index="1">
+            <div class="bar-header">
+                <span class="bar-icon">😊</span>
+                <span class="bar-name">ТВОЯ УЛЫБКА</span>
+                <span class="bar-percent" id="percent2">100%</span>
+            </div>
+            <div class="bar-track">
+                <div class="bar-fill glow-pink" id="fill2" style="width:0%;"></div>
+            </div>
+            <div class="bar-description">«Когда ты улыбаешься, у меня внутри всё переворачивается. Это мой якорь»</div>
+            <div class="bar-sparkles" id="sparkles2">✨✨✨</div>
+        </div>
+
+        <!-- Бар 3 -->
+        <div class="bar-card" data-index="2">
+            <div class="bar-header">
+                <span class="bar-icon">📹</span>
+                <span class="bar-name">ТВОИ КРУЖОЧКИ</span>
+                <span class="bar-percent" id="percent3">110%</span>
+            </div>
+            <div class="bar-track">
+                <div class="bar-fill glow-cyan" id="fill3" style="width:0%;"></div>
+            </div>
+            <div class="bar-description">«Я пересматриваю их по несколько раз. Твой смех, твои "приветы" — это мой личный сериал, который я готов пересматривать бесконечно»</div>
+            <div class="bar-sparkles" id="sparkles3">📹✨</div>
+        </div>
+
+        <div class="bars-footer">«Глаза, улыбка и твои кружочки в Telegram — это то, что держит меня на плаву каждый день. Спасибо, что ты есть»</div>
+    </section>
+
+    <!-- ===== БЛОК 4. ПИСЬМО ===== -->
+    <section id="letter" class="section">
+        <div class="letter-paper">
+            <div class="letter-text" id="letterText"></div>
+        </div>
+
+        <button class="surprise-btn" id="surpriseBtn">
+            <span class="heart-pulse">❤️</span> Открой сюрприз
+        </button>
+
+        <!-- Кнопка звонка (пока скрыта, появится после сюрприза) -->
+        <div id="callWrapper" style="display:none; width:100%; display:flex; justify-content:center; flex-direction:column; align-items:center; margin-top:20px;">
+            <button class="call-btn" id="callBtn">
+                <span class="icon">📞</span>
+                Позвони мне
+                <span class="number">+7 995 648-20-07</span>
+                <span class="sub">«Я всегда рад услышать твой голос»</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- ===== ФИНАЛЬНЫЙ ОВЕРЛЕЙ ===== -->
+    <div class="final-overlay" id="finalOverlay">
+        <div class="final-confetti" id="confettiContainer"></div>
+        <div class="final-hearts" id="heartsContainer"></div>
+
+        <div class="final-lines">
+            <div class="final-line left"></div>
+            <div class="final-line right"></div>
+        </div>
+
+        <div class="final-text" id="finalText">
+            <span class="heart-big">❤️</span> Я ЛЮБЛЮ ТЕБЯ <span class="heart-big">❤️</span><br />
+            <span style="font-size:18px; font-weight:400;">И это не изменится,<br />сколько бы времени ни прошло</span><br />
+            <span class="final-sub">Скоро увидимся ❤️</span>
+        </div>
+    </div>
+
+    <!-- ===== КНОПКА ЗАКРЫТЬ ===== -->
+    <button class="close-final" id="closeFinal">✕</button>
+
+    <script>
+        // ========================================
+        // 1. ЗВЕЗДНЫЙ ФОН (Canvas)
+        // ========================================
+        const canvas = document.getElementById('starCanvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        function createStars(count) {
+            stars = [];
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 1.5 + 0.5,
+                    alpha: Math.random() * 0.8 + 0.2,
+                    speed: Math.random() * 0.005 + 0.002,
+                    phase: Math.random() * Math.PI * 2
+                });
+            }
+        }
+        createStars(120);
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(star => {
+                star.phase += star.speed;
+                const alpha = star.alpha * (0.6 + 0.4 * Math.sin(star.phase));
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                ctx.fill();
+            });
+            requestAnimationFrame(drawStars);
+        }
+        drawStars();
+
+        // ========================================
+        // 2. ТАЙМЕР
+        // ========================================
+        function updateTimer() {
+            const now = new Date();
+            const target = new Date('2026-08-10T00:00:00');
+            const diff = target - now;
+
+            if (diff <= 0) {
+                document.getElementById('timerDisplay').textContent = '🎉 СЕГОДНЯ! 🎉';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+            const mins = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, '0');
+            const secs = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+
+            document.getElementById('timerDisplay').textContent =
+                `${days}д ${hours}ч ${mins}м ${secs}с`;
+        }
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+        // ========================================
+        // 3. СЧЕТЧИК ДНЕЙ
+        // ========================================
+        function updateDays() {
+            const start = new Date('2026-06-30T00:00:00');
+            const now = new Date();
+            const diff = now - start;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById('daysCounter').textContent = `Дней без тебя: ${days}`;
+        }
+        updateDays();
+
+        // ========================================
+        // 4. САМОЛЕТИК - ПОДСКАЗКА
+        // ========================================
+        document.getElementById('plane').addEventListener('click', function() {
+            const tip = document.getElementById('mapTip');
+            tip.classList.add('show');
+            setTimeout(() => tip.classList.remove('show'), 2500);
+        });
+
+        // ========================================
+        // 5. НИТИ СУДЬБЫ - КЛИК ПО ТОЧКАМ
+        // ========================================
+        document.querySelectorAll('.thread-dot').forEach(dot => {
+            dot.addEventListener('click', function() {
+                const target = this.dataset.target;
+                document.querySelectorAll('.thread-dot').forEach(d => d.classList.remove('active'));
+                document.querySelectorAll('.thread-text').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.thread-connector').forEach(c => c.classList.remove('gold'));
+
+                this.classList.add('active');
+                document.querySelector(`.thread-text[data-target="${target}"]`).classList.add('active');
+                document.querySelectorAll('.thread-connector')[target].classList.add('gold');
+            });
+        });
+
+        // ========================================
+        // 6. АНИМАЦИЯ ПОЯВЛЕНИЯ ПРИ СКРОЛЛЕ
+        // ========================================
+        const observerOptions = {
+            threshold: 0.25,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        // Нити
+        const threadObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.thread-item').forEach(el => threadObserver.observe(el));
+
+        // Прогресс-бары
+        let barsAnimated = false;
+        const barObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !barsAnimated) {
+                    barsAnimated = true;
+                    animateBars();
+                }
+            });
+        }, { threshold: 0.3 });
+        document.querySelectorAll('.bar-card').forEach(el => barObserver.observe(el));
+
+        function animateBars() {
+            const cards = document.querySelectorAll('.bar-card');
+            cards.forEach((card, i) => {
+                setTimeout(() => {
+                    card.classList.add('visible');
+                }, i * 300);
+            });
+
+            // Заполнение баров
+            setTimeout(() => {
+                document.getElementById('fill1').style.width = '92%';
+                document.getElementById('percent1').textContent = '92%';
+                document.getElementById('sparkles1').classList.add('show');
+            }, 400);
+
+            setTimeout(() => {
+                document.getElementById('fill2').style.width = '100%';
+                document.getElementById('percent2').textContent = '100%';
+                document.getElementById('sparkles2').classList.add('show');
+            }, 900);
+
+            setTimeout(() => {
+                document.getElementById('fill3').style.width = '110%';
+                document.getElementById('percent3').textContent = '110%';
+                document.getElementById('sparkles3').classList.add('show');
+            }, 1400);
+        }
+
+        // ========================================
+        // 7. ПИСЬМО (ПЕЧАТАЮЩИЙ ТЕКСТ)
+        // ========================================
+        const letterLines = [
+            '«Я написал этот сайт,',
+            'потому что слова в',
+            'мессенджере слишком',
+            'плоские.',
+            '',
+            'Мне нужно, чтобы ты',
+            'знала: пока ты читаешь',
+            'это, я уже считаю',
+            'секунды до того момента,',
+            'как возьму тебя за руку.',
+            '',
+            'Ты — мое "домой".',
+            '',
+            'И где бы я ни был —',
+            'мои мысли всегда с тобой»'
+        ];
+
+        let letterIndex = 0;
+        let charIndex = 0;
+        let letterStarted = false;
+
+        const letterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !letterStarted) {
+                    letterStarted = true;
+                    typeLetter();
+                }
+            });
+        }, { threshold: 0.3 });
+        letterObserver.observe(document.getElementById('letterText'));
+
+        function typeLetter() {
+            const container = document.getElementById('letterText');
+
+            function typeLine() {
+                if (letterIndex >= letterLines.length) {
+                    // Убираем курсор в конце
+                    const cursor = container.querySelector('.cursor');
+                    if (cursor) cursor.style.display = 'none';
+                    // Показываем кнопку звонка
+                    document.getElementById('callWrapper').style.display = 'flex';
+                    return;
+                }
+
+                const line = letterLines[letterIndex];
+                if (line === '') {
+                    container.innerHTML += '<br />';
+                    letterIndex++;
+                    setTimeout(typeLine, 200);
+                    return;
+                }
+
+                // Убираем курсор, если он есть
+                const oldCursor = container.querySelector('.cursor');
+                if (oldCursor) oldCursor.remove();
+
+                // Создаем строку
+                const span = document.createElement('span');
+                span.className = 'line';
+                span.id = `line-${letterIndex}`;
+                container.appendChild(span);
+
+                let i = 0;
+                function typeChar() {
+                    if (i < line.length) {
+                        span.textContent += line[i];
+                        i++;
+                        // Добавляем курсор в конец
+                        const oldCursor2 = container.querySelector('.cursor');
+                        if (oldCursor2) oldCursor2.remove();
+                        const cursorSpan = document.createElement('span');
+                        cursorSpan.className = 'cursor';
+                        container.appendChild(cursorSpan);
+                        setTimeout(typeChar, 30 + Math.random() * 20);
+                    } else {
+                        // Строка закончена
+                        const cursorSpan2 = container.querySelector('.cursor');
+                        if (cursorSpan2) cursorSpan2.remove();
+                        // Добавляем курсор в конец всего текста
+                        const finalCursor = document.createElement('span');
+                        finalCursor.className = 'cursor';
+                        container.appendChild(finalCursor);
+                        letterIndex++;
+                        setTimeout(typeLine, 250);
+                    }
+                }
+                typeChar();
+            }
+            typeLine();
+        }
+
+        // ========================================
+        // 8. СЮРПРИЗ
+        // ========================================
+        const surpriseBtn = document.getElementById('surpriseBtn');
+        const finalOverlay = document.getElementById('finalOverlay');
+        const closeFinal = document.getElementById('closeFinal');
+        const finalText = document.getElementById('finalText');
+
+        surpriseBtn.addEventListener('click', function() {
+            this.style.opacity = '0.5';
+            this.disabled = true;
+            launchSurprise();
+        });
+
+        function launchSurprise() {
+            finalOverlay.classList.add('show');
+            closeFinal.classList.add('show');
+
+            // Конфетти
+            const confettiContainer = document.getElementById('confettiContainer');
+            confettiContainer.innerHTML = '';
+            const colors = ['#ffd700', '#ff6b9d', '#ff4081', '#ffb300', '#ff80ab', '#ffab40'];
+            for (let i = 0; i < 80; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + '%';
+                piece.style.top = '-10px';
+                piece.style.width = (Math.random() * 8 + 4) + 'px';
+                piece.style.height = (Math.random() * 8 + 4) + 'px';
+                piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                piece.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+                piece.style.animationDelay = (Math.random() * 1.2) + 's';
+                piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+                confettiContainer.appendChild(piece);
+            }
+
+            // Сердечки
+            const heartsContainer = document.getElementById('heartsContainer');
+            heartsContainer.innerHTML = '';
+            const heartEmojis = ['❤️', '💖', '💗', '💕', '💓', '❤️‍🔥'];
+            for (let i = 0; i < 50; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'final-heart';
+                heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.bottom = '-20px';
+                heart.style.fontSize = (Math.random() * 20 + 16) + 'px';
+                heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                heart.style.animationDelay = (Math.random() * 2) + 's';
+                heartsContainer.appendChild(heart);
+            }
+
+            // Показываем текст с задержкой
+            setTimeout(() => {
+                finalText.classList.add('show');
+            }, 1200);
+
+            // Показываем кнопку звонка под оверлеем (в самой секции письма)
+            setTimeout(() => {
+                document.getElementById('callWrapper').style.display = 'flex';
+            }, 3000);
+        }
+
+        // Закрыть сюрприз
+        closeFinal.addEventListener('click', function() {
+            finalOverlay.classList.remove('show');
+            this.classList.remove('show');
+            finalText.classList.remove('show');
+            document.getElementById('callWrapper').style.display = 'flex';
+            surpriseBtn.style.opacity = '1';
+            surpriseBtn.disabled = false;
+        });
+
+        // ========================================
+        // 9. КНОПКА ЗВОНКА
+        // ========================================
+        document.getElementById('callBtn').addEventListener('click', function() {
+            window.location.href = 'tel:+79956482007';
+        });
+
+        // ========================================
+        // 10. ЗВЕЗДОПАД ПО КЛИКУ (Hero)
+        // ========================================
+        document.getElementById('hero').addEventListener('click', function(e) {
+            // Создаем падающую звезду
+            const star = document.createElement('div');
+            star.textContent = '✦';
+            star.style.position = 'fixed';
+            star.style.left = e.clientX + 'px';
+            star.style.top = e.clientY + 'px';
+            star.style.fontSize = '16px';
+            star.style.color = '#ffd700';
+            star.style.zIndex = '10';
+            star.style.pointerEvents = 'none';
+            star.style.transition = 'all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            star.style.opacity = '1';
+            document.body.appendChild(star);
+
+            requestAnimationFrame(() => {
+                star.style.transform = `translate(${Math.random() * 100 - 50}px, ${window.innerHeight * 0.8}px) rotate(360deg)`;
+                star.style.opacity = '0';
+            });
+
+            setTimeout(() => star.remove(), 1500);
+        });
+
+        // ========================================
+        // 11. ПЕРВОНАЧАЛЬНО СКРЫВАЕМ КНОПКУ ЗВОНКА
+        // ========================================
+        document.getElementById('callWrapper').style.display = 'none';
+
+        console.log('❤️ Сайт создан с любовью для самой особенной девушки ❤️');
+    </script>
+</body>
+</html>

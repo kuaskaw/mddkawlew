@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С 8 Марта, Любимая!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600&family=Pacifico&family=Raleway:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-pink: #ff758c;
+            --secondary-pink: #ff7eb3;
+            --soft-bg: #fff0f3;
+            --text-dark: #4a4a4a;
+            --white: #ffffff;
+            --accent: #ff4d6d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background-color: var(--soft-bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* --- Общие классы --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--accent);
+        }
+
+        /* --- Секция 1: Главный экран --- */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #fff0f3 0%, #ffe3e3 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1.5s ease forwards;
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 5rem;
+            color: var(--primary-pink);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 10px rgba(255, 117, 140, 0.3);
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            animation: bounce 2s infinite;
+            font-size: 2rem;
+            color: var(--primary-pink);
+            cursor: pointer;
+        }
+
+        /* --- Секция 2: Почему ты --- */
+        .reasons {
+            padding: 80px 0;
+            background: var(--white);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s;
+            border: 1px solid #f0f0f0;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(255, 117, 140, 0.15);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* --- Секция 3: Галерея --- */
+        .gallery {
+            padding: 80px 0;
+            background: var(--soft-bg);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .photo-frame {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: rotate(-2deg);
+            transition: transform 0.3s;
+        }
+
+        .photo-frame:nth-child(even) {
+            transform: rotate(2deg);
+        }
+
+        .photo-frame:hover {
+            transform: scale(1.05) rotate(0deg);
+            z-index: 10;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 300px;
+            background-color: #ddd;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 1.2rem;
+            /* Сюда можно вставить <img> */
+            background-image: url('https://images.unsplash.com/photo-1490750967868-58cb75069ed6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        /* Заглушки для разных фото */
+        .p2 { background-image: url('https://images.unsplash.com/photo-1516961642265-531546e84af2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'); }
+        .p3 { background-image: url('https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'); }
+
+        /* --- Секция 4: Подарок --- */
+        .gift-section {
+            padding: 100px 0;
+            text-align: center;
+            background: linear-gradient(to top, #fff0f3, #fff);
+        }
+
+        .gift-box {
+            font-size: 5rem;
+            cursor: pointer;
+            transition: transform 0.5s;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .hidden-message {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            display: none; /* Скрыто по умолчанию */
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .hidden-message h3 {
+            color: var(--accent);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        /* --- Анимации --- */
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Класс для JS анимации при скролле */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Адаптив */
+        @media (max-width: 768px) {
+            h1 { font-size: 3.5rem; }
+            h2 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Секция 1: Приветствие -->
+    <header>
+        <div class="hero-content">
+            <h1>С 8 Марта!</h1>
+            <p style="font-size: 1.2rem; margin-top: 10px;">Для самой прекрасной девушки на свете</p>
+        </div>
+        <div class="scroll-down" onclick="document.getElementById('reasons').scrollIntoView({behavior: 'smooth'})">
+            &#8595;
+        </div>
+    </header>
+
+    <!-- Секция 2: Причины -->
+    <section id="reasons" class="reasons">
+        <div class="container">
+            <h2 class="reveal">Почему ты особенная</h2>
+            <div class="cards-grid">
+                <div class="card reveal">
+                    <span class="card-icon">✨</span>
+                    <h3>Твоя улыбка</h3>
+                    <p>Она освещает даже самые пасмурные дни и дарит тепло.</p>
+                </div>
+                <div class="card reveal">
+                    <span class="card-icon">🌸</span>
+                    <h3>Твоя нежность</h3>
+                    <p>С тобой мир становится мягче, добрее и уютнее.</p>
+                </div>
+                <div class="card reveal">
+                    <span class="card-icon">🧠</span>
+                    <h3>Твой ум</h3>
+                    <p>Меня восхищает, как ты видишь этот мир и решаешь задачи.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="gift-section">
+        <div class="container">
+            <h2 class="reveal">У меня есть подарок...</h2>
+            <div class="gift-box reveal" onclick="openGift()">🎁</div>
+            <p class="reveal" style="margin-bottom: 20px;">Нажми на коробку</p>
+
+            <div id="giftMessage" class="hidden-message">
+                <h3>Сертификат на исполнение желаний!</h3>
+                <p>Этот купон дает право на:</p>
+                <ul style="list-style: none; margin: 20px 0; text-align: left; display: inline-block;">
+                    <li>✅ 1 Массаж (30 мин)</li>
+                    <li>✅ 1 Романтический ужин</li>
+                    <li>✅ 1 День "Ты главная"</li>
+                </ul>
+                <p>Люблю тебя! ❤️</p>
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 20px; background: #fff; color: #888; font-size: 0.9rem;">
+        Сделано с любовью специально для тебя
+    </footer>
+
+    <script>
+
+        function openGift() {
+            const giftBox = document.querySelector('.gift-box');
+            const message = document.getElementById('giftMessage');
+            
+            giftBox.style.display = 'none'; // Скрываем коробку
+            message.style.display = 'block'; // Показываем сообщение
+        }
+
+        // Анимация появления при скролле
+        window.addEventListener('scroll', reveal);
+
+        function reveal() {
+            var reveals = document.querySelectorAll('.reveal');
+
+            for(var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+
+                if(elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+        
+        // Запустить один раз при загрузке, чтобы показать верхние элементы
+        reveal();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мир Котиков</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ffe6f2, #ffcce6);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            overflow: hidden;
+        }
+        
+        .app-container {
+            width: 100%;
+            max-width: 375px;
+            height: 850px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        
+        /* Header styles */
+        .app-header {
+            height: 60px;
+            background: linear-gradient(to right, #ff6b6b, #ff8e8e);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .page-indicator {
+            position: absolute;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-weight: bold;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        /* Main content */
+        .main-content {
+            height: calc(100% - 60px - 60px - 150px);
+            overflow-y: auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* Navigation buttons at bottom */
+        .nav-buttons {
+            height: 60px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            border-top: 1px solid #ffe6f2;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 -5px 10px rgba(0,0,0,0.05);
+        }
+        
+        .nav-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 12px 25px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            flex: 1;
+            margin: 0 10px;
+            transition: all 0.2s;
+        }
+        
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Screen content styles */
+        .screen {
+            display: none;
+            height: 100%;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        /* Project navigation on first screen */
+        .project-nav {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .project-btn {
+            background: #ff6b6b;
+            color: white;
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .project-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .project-btn i {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        /* Center block */
+        .center-block {
+            background: white;
+            border: 2px solid #ff6b6b;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+        }
+        
+        .center-block h2 {
+            color: #ff6b6b;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .center-block button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 25px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        
+        /* Celebration screen */
+        .celebration {
+            text-align: center;
+            padding: 20px;
+            background: #fff0f5;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        .celebration h1 {
+            font-size: 28px;
+            color: #ff3366;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        /* Timer styles */
+        .timer-container {
+            background: white;
+            border: 3px solid #ff6b6b;
+            border-radius: 15px;
+            padding: 15px 10px;
+            margin: 15px auto;
+            max-width: 90%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .timer-title {
+            font-size: 16px;
+            color: #ff3366;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .timer-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+        
+        .timer-unit {
+            background: linear-gradient(to bottom, #ff6b6b, #ff8e8e);
+            color: white;
+            border-radius: 10px;
+            padding: 10px 5px;
+            text-align: center;
+        }
+        
+        .timer-value {
+            font-size: 24px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .timer-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .cat-illustration {
+            max-width: 100%;
+            margin: 20px auto;
+            display: block;
+            border-radius: 10px;
+        }
+        
+        .celebration-text {
+            text-align: left;
+            max-width: 90%;
+            margin: 20px auto 0;
+            line-height: 1.5;
+            color: #555;
+            font-size: 14px;
+        }
+        
+        /* Card grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .card {
+            border: 2px solid #ff6b6b;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            padding: 10px;
+            text-align: center;
+            background: #fff9fb;
+            border-top: 1px solid #ffe6f2;
+            width: 100%;
+        }
+        
+        .card-header h3 {
+            color: #ff6b6b;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .card-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .card-text {
+            padding: 10px;
+            text-align: left;
+            line-height: 1.4;
+            color: #555;
+            font-size: 14px;
+            flex: 1;
+            display: none;
+        }
+        
+        .card-text.active {
+            display: block;
+        }
+        
+        .card-arrow {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        /* Chat screen */
+        .chat-container {
+            background: #ffccdd;
+            border-radius: 15px;
+            padding: 15px;
+            height: calc(100% - 20px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ff99b3;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ff99b3;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .user-status {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            position: relative;
+            background: #ff6b6b;
+            color: white;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .message.received {
+            background: white;
+            color: #333;
+            align-self: flex-start;
+            border-radius: 18px 18px 18px 5px;
+        }
+        
+        .message.sent {
+            align-self: flex-end;
+            border-radius: 18px 18px 5px 18px;
+        }
+        
+        .message-time {
+            font-size: 10px;
+            color: #aaa;
+            text-align: right;
+            margin-top: 3px;
+        }
+        
+        .chat-input {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #ff99b3;
+        }
+        
+        .input-field {
+            flex: 1;
+            background: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin: 0 10px;
+        }
+        
+        .send-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        /* Decorative elements */
+        .paw {
+            position: absolute;
+            font-size: 30px;
+            opacity: 0.2;
+            z-index: 1;
+        }
+        
+        .paw-1 {
+            top: 30px;
+            left: 20px;
+        }
+        
+        .paw-2 {
+            bottom: 120px;
+            right: 20px;
+        }
+        
+        .paw-3 {
+            top: 150px;
+            right: 20px;
+        }
+        
+        .paw-4 {
+            bottom: 30px;
+            left: 20px;
+        }
+        
+        /* Heart decoration */
+        .heart {
+            position: absolute;
+            font-size: 24px;
+            color: #ff3366;
+            opacity: 0.3;
+            z-index: 1;
+        }
+        
+        .heart-1 {
+            top: 40px;
+            right: 50px;
+        }
+        
+        .heart-2 {
+            top: 70px;
+            right: 80px;
+        }
+        
+        .heart-3 {
+            top: 100px;
+            right: 110px;
+        }
+        
+        /* Background elements */
+        .bg-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .bg-decoration-1 {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23ffccdd" fill-opacity="0.2"/></svg>');
+            background-size: 200px;
+            top: -50px;
+            left: -50px;
+        }
+        
+        .bg-decoration-2 {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23ff99b3" fill-opacity="0.1"/></svg>');
+            background-size: 150px;
+            bottom: -40px;
+            right: -40px;
+        }
+        
+        /* Animation for buttons */
+        .btn {
+            transition: all 0.2s;
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Hide scrollbar */
+        .main-content::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .main-content {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Background decorations -->
+        <div class="bg-decoration bg-decoration-1"></div>
+        <div class="bg-decoration bg-decoration-2"></div>
+        
+        <!-- Paw decorations -->
+        <div class="paw paw-1">🐾</div>
+        <div class="paw paw-2">🐾</div>
+        <div class="paw paw-3">🐾</div>
+        <div class="paw paw-4">🐾</div>
+        
+        <!-- Heart decorations -->
+        <div class="heart heart-1">❤️</div>
+        <div class="heart heart-2">❤️</div>
+        <div class="heart heart-3">❤️</div>
+        
+        <!-- Header -->
+        <div class="app-header">
+            <button class="back-btn" id="backBtn">←</button>
+            <span class="page-indicator" id="pageIndicator">1/4</span>
+        </div>
+        
+        <!-- Main content -->
+        <div class="main-content" id="mainContent">
+            <!-- Screen 1: Project Navigation (1/4) -->
+            <div class="screen active" id="screen1">
+                <div class="center-block">
+                    <h2>Мы</h2>
+                    <button id="okBtn">фааааааа</button>
+                </div>
+                
+                <div class="project-nav">
+                    <button class="project-btn" id="homeBtn">
+                        <i>🏠</i>Главная
+                    </button>
+                    <button class="project-btn" id="aboutBtn">
+                        <i>ℹ️</i>О нас
+                    </button>
+                    <button class="project-btn" id="projectsBtn">
+                        <i>🛠️</i>Проекты
+                    </button>
+                    <button class="project-btn" id="contactsBtn">
+                        <i>📱</i>Контакты
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Screen 2: Celebration with Timer (2/4) -->
+            <div class="screen" id="screen2">
+                <div class="celebration">
+                    <h1>МЫ ВМЕСТЕ УЖЕ</h1>
+                    
+                    <div class="timer-container">
+                        <div class="timer-title">С 11 января, 21:20</div>
+                        <div class="timer-grid">
+                            <div class="timer-unit">
+                                <span class="timer-value" id="months">00</span>
+                                <span class="timer-label">мес</span>
+                            </div>
+                            <div class="timer-unit">
+                                <span class="timer-value" id="days">00</span>
+                                <span class="timer-label">дн</span>
+                            </div>
+                            <div class="timer-unit">
+                                <span class="timer-value" id="hours">00</span>
+                                <span class="timer-label">ч</span>
+                            </div>
+                            <div class="timer-unit">
+                                <span class="timer-value" id="minutes">00</span>
+                                <span class="timer-label">мин</span>
+                            </div>
+                            <div class="timer-unit">
+                                <span class="timer-value" id="seconds">00</span>
+                                <span class="timer-label">сек</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='120' viewBox='0 0 200 120'><circle cx='50' cy='70' r='25' fill='%23ff99b3'/><circle cx='150' cy='70' r='25' fill='%23ff6b6b'/><path d='M50,70 Q100,30 150,70' fill='none' stroke='%23ff6b6b' stroke-width='3'/><text x='50' y='75' text-anchor='middle' fill='white' font-size='20'>❤️</text><text x='150' y='75' text-anchor='middle' fill='white' font-size='20'>❤️</text></svg>" alt="Cat illustration" class="cat-illustration">
+                    
+                    <div class="celebration-text">
+                       <p>Мы с тобой не так уж и долго, но кажется что уже вечность.
+                        <p>Мне нравится то, как мы проводим время вместе, как проводим наше будущее и много чего еще. Я 
+                            надеюсь, что мы с тобой будем счастливы друг для друга что-то делать и добиваться своих целей.</p>
+                 
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Screen 3: Card Grid (3/4) -->
+            <div class="screen" id="screen3">
+                <div class="card-grid">
+                    <!-- Card 1: We are kittens -->
+                    <div class="card" id="kittensCard">
+                        <div class="card-header">
+                            <h3>Мы - котята</h3>
+                        </div>
+                        <div class="card-image" style="background-image: url('images/cats.jpg'); background-size: cover; background-position: center;">
+                            <div class="card-arrow">←</div>
+                        </div>
+                        <div class="card-text" id="kittensText">
+                            <p>Котята такие милые, потому что у них большие черные выразительные глаза, которые словно говорят о безграничной любви и доверии - ЭТО МЫ!</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2: We are songs -->
+                    <div class="card" id="songsCard">
+                        <div class="card-header">
+                            <h3>Мы - песенки</h3>
+                        </div>
+                        <div class="card-image" style="background-image: url('images/song.jpg'); background-size: cover; background-position: center;">
+                            <div class="card-arrow">←</div>
+                        </div>
+                        <div class="card-text" id="songsText">
+Песни это лучший способ передать свои этоции. Они также передают всю свою нежность и любовь, которую нельзя описать словами. Именно поэтому, ЭТО - МЫ
+                        </div>
+                    </div>
+                    
+                    <!-- Card 3: We are everything -->
+                    <div class="card" id="everythingCard">
+                        <div class="card-header">
+                           h3>Мы - всё</h3>
+                        </div>
+                        <div class="card-image" style="background-image: url('images/ms.png'); background-size: cover; background-position: center;">
+                            <div class="card-arrow">←</div>
+                        </div>
+                        <div class="card-text" id="everythingText">
+                            <p>Каждый рисунок, каждая совместная фотография, каждый приятный момент, которая связывает с нами, все то, что оставляет воспоминания - ЭТО МЫ!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Screen 4: Chat (4/4) -->
+            <div class="screen" id="screen4">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <div class="avatar">Щ</div>
+                        <div class="user-info">
+                            <div class="user-name">Любимая ❤</div>
+                            <div class="user-status">в сердце</div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <span style="font-size: 20px; cursor: pointer;">🔍</span>
+                            <span style="font-size: 20px; cursor: pointer;">📞</span>
+                            <span style="font-size: 20px; cursor: pointer;">⋮</span>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages">
+                        <div class="message received">
+                            ходить на свидания каждый день
+                            <div class="message-time">10:30</div>
+                        </div>
+                        <div class="message received">
+                            съездить вдвоем куда-нибудь
+                            <div class="message-time">10:31</div>
+                        </div>
+                        <div class="message sent">
+                            завести собачку
+                            <div class="message-time">10:32</div>
+                        </div>
+                        <div class="message received">
+                            готовить вместе
+                            <div class="message-time">10:33</div>
+                        </div>
+                        <div class="message sent">
+                            быть всегда вместе
+                            <div class="message-time">10:34</div>
+                        </div>
+                        <div class="message received">
+                            Купить парные худи
+                            <div class="message-time">10:35</div>
+                        </div>
+                        <div class="message sent">
+                            я очень люблю тебя 💖
+                            <div class="message-time">10:36</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input">
+                        <input type="text" class="input-field" placeholder="Напиши что-нибудь...">
+                        <button class="send-btn">➤</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation buttons at bottom -->
+        <div class="nav-buttons">
+            <button class="nav-btn" id="prevBtn">Назад</button>
+            <button class="nav-btn" id="nextBtn">Вперед</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const mainContent = document.getElementById('mainContent');
+            const pageIndicator = document.getElementById('pageIndicator');
+            const backBtn = document.getElementById('backBtn');
+            const screens = document.querySelectorAll('.screen');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            // Card elements
+            const kittensCard = document.getElementById('kittensCard');
+            const songsCard = document.getElementById('songsCard');
+            const everythingCard = document.getElementById('everythingCard');
+            
+            // Text elements
+            const kittensText = document.getElementById('kittensText');
+            const songsText = document.getElementById('songsText');
+            const everythingText = document.getElementById('everythingText');
+            
+            // Current screen index (0-based)
+            let currentScreen = 0; // Start at screen 1/4
+            
+            // Update screen display
+            function updateScreen() {
+                // Hide all screens
+                screens.forEach(screen => {
+                    screen.classList.remove('active');
+                });
+                
+                // Show current screen
+                screens[currentScreen].classList.add('active');
+                
+                // Update page indicator
+                pageIndicator.textContent = `${currentScreen + 1}/4`;
+            }
+            
+            // Navigation functions
+            function goToScreen(index) {
+                if (index >= 0 && index < screens.length) {
+                    currentScreen = index;
+                    updateScreen();
+                }
+            }
+            
+            function goBack() {
+                if (currentScreen > 0) {
+                    currentScreen--;
+                    updateScreen();
+                }
+            }
+            
+            function goForward() {
+                if (currentScreen < screens.length - 1) {
+                    currentScreen++;
+                    updateScreen();
+                }
+            }
+            
+            // Card text toggle
+            function toggleText(card, textElement) {
+                textElement.classList.toggle('active');
+            }
+            
+            // Event listeners
+            backBtn.addEventListener('click', goBack);
+            prevBtn.addEventListener('click', goBack);
+            nextBtn.addEventListener('click', goForward);
+            
+            // Project navigation buttons
+            document.getElementById('homeBtn').addEventListener('click', () => goToScreen(0));
+            document.getElementById('aboutBtn').addEventListener('click', () => goToScreen(1));
+            document.getElementById('projectsBtn').addEventListener('click', () => goToScreen(2));
+            document.getElementById('contactsBtn').addEventListener('click', () => goToScreen(3));
+            
+            // Card text toggle events
+            kittensCard.addEventListener('click', () => toggleText(kittensCard, kittensText));
+            songsCard.addEventListener('click', () => toggleText(songsCard, songsText));
+            everythingCard.addEventListener('click', () => toggleText(everythingCard, everythingText));
+            
+            // Arrow click event (to close the text)
+            document.querySelectorAll('.card-arrow').forEach(arrow => {
+                arrow.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const card = this.closest('.card');
+                    const textElement = card.querySelector('.card-text');
+                    textElement.classList.remove('active');
+                });
+            });
+            
+            // Initialize
+            updateScreen();
+            
+            // Timer functionality
+            function startTimer() {
+                // Set start date: 11 января 2026 года, 21:20
+                const startDate = new Date(2026, 0, 11, 21, 20, 0);
+                
+                function updateTimer() {
+                    const now = new Date();
+                    const diff = now - startDate;
+                    
+                    // Calculate time difference with calendar accuracy
+                    let start = new Date(startDate);
+                    let end = new Date(now);
+                    
+                    // Calculate months
+                    let months = (end.getFullYear() - start.getFullYear()) * 12;
+                    months += end.getMonth() - start.getMonth();
+                    if (end.getDate() < start.getDate()) {
+                        months--;
+                    }
+                    
+                    // Calculate days
+                    let startCheck = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+                    let endCheck = new Date(start.getFullYear(), start.getMonth() + months, start.getDate());
+                    
+                    // Adjust for month end
+                    if (endCheck > end) {
+                        endCheck = new Date(start.getFullYear(), start.getMonth() + months - 1, start.getDate());
+                    }
+                    
+                    let days = Math.floor((end - endCheck) / (1000 * 60 * 60 * 24));
+                    
+                    // Calculate remaining time
+                    const totalSeconds = Math.floor((end - start) / 1000);
+                    const hours = Math.floor((totalSeconds % 86400) / 3600);
+                    const minutes = Math.floor((totalSeconds % 3600) / 60);
+                    const seconds = totalSeconds % 60;
+                    
+                    // Update display
+                    document.getElementById('months').textContent = String(months).padStart(2, '0');
+                    document.getElementById('days').textContent = String(days).padStart(2, '0');
+                    document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+                    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+                    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+                }
+                
+                // Update immediately and then every second
+                updateTimer();
+                setInterval(updateTimer, 1000);
+            }
+            
+            // Start the timer when the page loads
+            startTimer();
+        });
+    </script>
+</body>
+</html>

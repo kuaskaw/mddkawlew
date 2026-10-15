@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Только для тебя 💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cream: #fffaf0;
+            --pink-light: #ffcdd2;
+            --pink-main: #ff6b9d;
+            --red: #8b0000;
+            --gold: #ffd700;
+            --dark: #4a4a4a;
+            --transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--cream);
+            color: var(--dark);
+            overflow-x: hidden;
+            overflow-y: hidden;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Горизонтальный слайдер */
+        .slider-container {
+            display: flex;
+            height: 100vh;
+            scroll-snap-type: x mandatory;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start;
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Навигация */
+        .nav-buttons {
+            position: fixed;
+            bottom: 2rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(139, 0, 0, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .nav-btn.active {
+            background: var(--red);
+            transform: scale(1.3);
+        }
+
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--red);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .nav-arrow:hover {
+            background: var(--red);
+            color: white;
+        }
+
+        .nav-arrow.prev {
+            left: 2rem;
+        }
+
+        .nav-arrow.next {
+            right: 2rem;
+        }
+
+        /* Секция 1: Вступление */
+        .slide-1 {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('assets/photo1.jpg');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            color: white;
+        }
+
+        .slide-1 h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .slide-1 p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .btn {
+            background: var(--red);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            animation: fadeInUp 1s ease-out 0.6s both;
+            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
+        }
+
+        .btn:hover {
+            background: #a00000;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.6);
+        }
+
+        /* Секция 2: Галерея */
+        .slide-2 {
+            background: var(--cream);
+            text-align: center;
+        }
+
+        .slide-2 h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: var(--red);
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .slide-2 h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--pink-main);
+            border-radius: 3px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin-top: 2rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(139, 0, 0, 0.85);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+
+   
+        .slide-3 {
+            background: linear-gradient(135deg, var(--pink-light), var(--cream));
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .slide-3 h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: var(--red);
+            margin-bottom: 3rem;
+        }
+
+        .love-reasons {
+            max-width: 800px;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .love-reasons::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 8rem;
+            color: var(--pink-light);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .reason-item {
+            text-align: left;
+            margin-bottom: 1.5rem;
+            padding-left: 2.5rem;
+            position: relative;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .reason-item::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--pink-main);
+            font-size: 1.5rem;
+            top: -3px;
+        }
+
+        /* Секция 4: Линия времени */
+        .slide-4 {
+            background: var(--cream);
+            text-align: center;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .slide-4 h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: var(--red);
+            margin-bottom: 4rem;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--pink-main);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 4rem;
+            position: relative;
+            width: 100%;
+        }
+
+        .timeline-item:nth-child(odd) {
+            justify-content: flex-end;
+        }
+
+        .timeline-content {
+            width: calc(50% - 60px);
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            text-align: left;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            text-align: right;
+        }
+
+        .timeline-content::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            top: 30px;
+            border: 4px solid var(--red);
+            border-radius: 50%;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            right: -48px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::after {
+            left: -48px;
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: var(--red);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .timeline-photo {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        /* Секция 5: Финал */
+        .slide-5 {
+            background: linear-gradient(rgba(139, 0, 0, 0.9), rgba(100, 0, 0, 0.95)), url('assets/final.jpg');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide-5 h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 6rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 2;
+        }
+
+        .slide-5 .subtitle {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .final-text {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+            position: relative;
+            z-index: 2;
+        }
+
+        .final-photo {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 8px solid var(--gold);
+            margin: 2rem auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 2;
+        }
+
+        .final-btn {
+            background: var(--gold);
+            color: var(--red);
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            z-index: 2;
+            font-weight: 600;
+        }
+
+        .final-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+        }
+
+        /* Анимации */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Мобильная адаптация */
+        @media (max-width: 768px) {
+            .slide-1 h1 {
+                font-size: 2.5rem;
+            }
+
+            .slide-1 p {
+                font-size: 1.2rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                justify-content: flex-end !important;
+            }
+
+            .timeline-content {
+                width: calc(100% - 80px) !important;
+                margin-right: 0 !important;
+                margin-left: 40px !important;
+            }
+
+            .timeline-content::after {
+                left: -58px !important;
+                right: auto !important;
+            }
+
+            .slide-5 h2 {
+                font-size: 4rem;
+            }
+
+            .nav-arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container" id="slider">
+        <div class="slide slide-1">
+            <h1>💌 Дорогая моя, Маша</h1>
+            <p>Я создал эту страницу, чтобы сказать тебе то, что не всегда успеваю произнести вслух...</p>
+            <button class="btn" onclick="scrollToSlide(1)">Читать мои слова</button>
+        </div>
+
+        <div class="slide slide-2">
+            <h2>🌸 Наши моменты, которые я храню в сердце</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="assets/photo2.jpg" alt="Наш момент">
+                    <div class="gallery-caption">Почти бесплатный фотограф</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/photo3.jpg" alt="Наш момент">
+                    <div class="gallery-caption">опять почти бесплатный фотограф</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="assets/photo4.jpg" alt="Наш момент">
+                    <div class="gallery-caption">зато фотки классные</div>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="slide slide-3">
+            <h2>💖 Почему я люблю именно тебя</h2>
+            <div class="love-reasons">
+                <div class="reason-item">Ты смеёшься моим глупым шуткам, даже когда они не смешные</div>
+                <div class="reason-item">Ты обнимаешь меня, когда мне плохо, даже если я молчу и не показываю этого</div>
+                <div class="reason-item">Ты делаешь мой мир теплее просто своим присутствием</div>
+                <div class="reason-item">Ты целуешь меня каждый раз будто последний, и это классно</div>
+                <div class="reason-item">Ты - мой дом. Не место. А чувство.</div>
+            </div>
+        </div>
+
+        <div class="slide slide-4">
+            <h2>🌷 Наш путь вместе</h2>
+            <div class="timeline">
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <img src="assets/timeline1.jpg" alt="Знакомство" class="timeline-photo">
+                        <div class="timeline-date">22 декабря 2025</div>
+                        <div class="timeline-text">Написал тебе, и пошло поехало.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <img src="assets/timeline2.jpg" alt="Первая прогулка" class="timeline-photo">
+                        <div class="timeline-date">23 декабря 2025</div>
+                        <div class="timeline-text">Первый раз увидел тебя вживую - и понял: это она. Та самая.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <img src="assets/timeline3.jpg" alt="Первое обьятие" class="timeline-photo">
+                        <div class="timeline-date">23 декабря 2025</div>
+                        <div class="timeline-text">Первый раз обнял тебя, сильно волновался</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <img src="assets/timeline4.jpg" alt="Сегодня" class="timeline-photo">
+                        <div class="timeline-date">Сегодня</div>
+                        <div class="timeline-text">Ты рядом. И я благодарен небу за каждый день, который даёт мне быть с тобой</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide slide-5">
+            <h2 class="floating">🌹 Я ВЫБИРАЮ ТЕБЯ 🌹</h2>
+            <div class="subtitle">Каждый день. Каждый час. Каждую минуту.</div>
+            <div class="final-text">Не потому что должен. А потому что хочу.</div>
+            <img src="assets/final.jpg" alt="Мы вместе" class="final-photo">
+            <div style="font-size: 2rem; margin: 2rem 0; position: relative; z-index: 2;">"Люблю. Люблю. Люблю."</div>
+            <button class="final-btn" onclick="savePage()">Сохранить это письмо в сердце</button>
+        </div>
+    </div>
+
+    <div class="nav-buttons" id="navButtons"></div>
+    <div class="nav-arrow prev" onclick="prevSlide()">❮</div>
+    <div class="nav-arrow next" onclick="nextSlide()">❯</div>
+
+    <script>
+        const slider = document.getElementById('slider');
+        const slides = document.querySelectorAll('.slide');
+        const navButtons = document.getElementById('navButtons');
+
+
+        slides.forEach((_, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'nav-btn';
+            if (index === 0) btn.classList.add('active');
+            btn.onclick = () => scrollToSlide(index);
+            navButtons.appendChild(btn);
+        });
+
+        slider.addEventListener('scroll', () => {
+            const scrollPosition = slider.scrollLeft;
+            const slideWidth = window.innerWidth;
+            
+            slides.forEach((slide, index) => {
+                const slideStart = index * slideWidth;
+                const slideEnd = slideStart + slideWidth;
+                
+                if (scrollPosition >= slideStart - slideWidth / 3 && scrollPosition < slideEnd - slideWidth / 3) {
+                    document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+                        btn.classList.toggle('active', i === index);
+                    });
+                }
+            });
+        });
+        function scrollToSlide(index) {
+            slider.scrollTo({
+                left: index * window.innerWidth,
+                behavior: 'smooth'
+            });
+        }
+
+        function nextSlide() {
+            const currentIndex = Math.round(slider.scrollLeft / window.innerWidth);
+            if (currentIndex < slides.length - 1) {
+                scrollToSlide(currentIndex + 1);
+            }
+        }
+
+        function prevSlide() {
+            const currentIndex = Math.round(slider.scrollLeft / window.innerWidth);
+            if (currentIndex > 0) {
+                scrollToSlide(currentIndex - 1);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        function savePage() {
+            alert('❤️ Эта страница сохранена в твоём сердце навсегда!\n(Добавь её в закладки браузера, чтобы вернуться в любой момент)');
+        }
+
+        function createPetal() {
+            if (Math.round(slider.scrollLeft / window.innerWidth) === slides.length - 1) {
+                const petal = document.createElement('div');
+                petal.style.position = 'absolute';
+                petal.style.top = '-20px';
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                petal.style.color = Math.random() > 0.5 ? 'var(--pink-main)' : 'var(--gold)';
+                petal.style.zIndex = '1';
+                petal.style.pointerEvents = 'none';
+                petal.innerHTML = '🌹';
+                petal.style.opacity = '0.7';
+                document.querySelector('.slide-5').appendChild(petal);
+
+                let pos = 0;
+                const interval = setInterval(() => {
+                    pos += 5;
+                    petal.style.top = pos + 'px';
+                    petal.style.transform = `rotate(${pos}deg)`;
+                    
+                    if (pos > window.innerHeight) {
+                        clearInterval(interval);
+                        petal.remove();
+                    }
+                }, 30);
+
+                if (document.querySelectorAll('.slide-5 div').length > 50) {
+                    document.querySelector('.slide-5 div').remove();
+                }
+            }
+        }
+
+        setInterval(createPetal, 300);
+    </script>
+</body>
+</html>
